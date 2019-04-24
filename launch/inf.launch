@@ -8,7 +8,7 @@
   <node pkg="turtlesim" type="turtlesim_node" name="turtlesim" output="screen" />
 
   <node pkg="ros_test" type="inf_main_node" name="turtle_controll" output="screen" >
-    <param name="velocity" value="$(arg velocities)" />
+    <param name="velocity" value="$(arg velocity)" />
     <param name="use_arc" value="$(arg use_arc)" />
   </node>
 
