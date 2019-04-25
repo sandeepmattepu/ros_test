@@ -25,4 +25,4 @@ We want to have a short documentation of your work. The following content is req
 * What was your approach?
 * How does your solution look like?
 
-The documentation could be a text file (Markdown is allowed) or a **PDF** file. We will reject office documents 
+The documentation could be a text file (Markdown is allowed) or a **PDF** file. We will reject office documents (like docx, odt, ...). There is no guideline about the length of your documentation - it should be complete.
