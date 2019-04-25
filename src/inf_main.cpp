@@ -10,12 +10,12 @@ void draw_u( bool cw ) {
         sign = 1;
     }
 
-    turtle.turn( sign * 45 );
+    turtle->turn( sign * 45 );
     for (int i = 0; i < 3; i++) {
-        turtle.forward(3);
-        turtle.turn( sign * 90 );
+        turtle->forward(3);
+        turtle->turn( sign * 90 );
     }
-    turtle.turn( sign * -45 );
+    turtle->turn( sign * -45 );
 }
 
 int main(int argc, char **argv)
