@@ -52,7 +52,7 @@ Description of this task has made us confuse.
 ```c++
 if(use_arc)
 {
-    turtle->arc(sign*1.5);
+    turtle->arc(sign*1.5, 180);
     turtle->turn(sign*45);
 }
 ```
