@@ -141,7 +141,6 @@ include_directories(
 
 add_executable( main_node src/main.cpp )
 add_executable( inf_main_node src/inf_main.cpp )
-add_executable( inf_arc_node src/inf_arc.cpp )
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -160,11 +159,9 @@ add_executable( inf_arc_node src/inf_arc.cpp )
 
 add_dependencies(main_node ros_test_generate_messages_cpp)
 add_dependencies(inf_main_node ros_test_generate_messages_cpp)
-add_dependencies(inf_arc_node ros_test_generate_messages_cpp)
 
 target_link_libraries( main_node ${catkin_LIBRARIES} )
 target_link_libraries( inf_main_node ${catkin_LIBRARIES} )
-target_link_libraries( inf_arc_node ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
