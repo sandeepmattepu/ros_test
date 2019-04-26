@@ -40,7 +40,7 @@ public:
 
         ros::NodeHandle nh;
 
-        this->pub_cmd_vel = nh.advertise<geometry_msgs::Twist>("turtle1_cmd_vel", 1);
+        this->pub_cmd_vel = nh.advertise<geometry_msgs::Twist>("turtle1/cmd_vel", 1);
         this->sub_pose = nh.subscribe<turtlesim::Pose>("/turtle1/pose", 1, &AbstractTurtle::poseCallback, this);
 
         while ( !this->ready && ros::ok() ) {

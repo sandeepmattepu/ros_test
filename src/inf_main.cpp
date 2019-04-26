@@ -2,7 +2,7 @@
 
 std::shared_ptr<tutorial::AbstractTurtle> turtle;
 
-void draw_u( bool cw ) {
+void draw_u( bool cw, bool use_arc ) {
     int sign;
     if ( cw ) {
         sign = -1;
@@ -10,12 +10,17 @@ void draw_u( bool cw ) {
         sign = 1;
     }
 
-    turtle.turn( sign * 45 );
-    for (int i = 0; i < 3; i++) {
-        turtle.forward(3);
-        turtle.turn( sign * 90 );
+    turtle->turn( sign * 45 );
+    if(use_arc){
+        turtle->arc( sign * 1.5, 180);
+        turtle->turn( sign * 45 );
+    }else {
+        for (int i = 0; i < 3; i++) {
+            turtle->forward(3);
+            turtle->turn( sign * 90 );
+        }
+        turtle->turn( sign * -45 );
     }
-    turtle.turn( sign * -45 );
 }
 
 int main(int argc, char **argv)
@@ -32,9 +37,9 @@ int main(int argc, char **argv)
     turtle->turn(45);
 
     turtle->forward( sqrt(4.5) );
-    draw_u( true );
+    draw_u( true, use_arc );
     turtle->forward( 2 * sqrt(4.5) );
-    draw_u( false );
+    draw_u( false, use_arc );
     turtle->forward( sqrt(4.5) );
 
     turtle.reset();
