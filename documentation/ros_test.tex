@@ -1,0 +1,125 @@
+%% document class
+\documentclass[12pt]{article}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\usepackage{listings}
+\usepackage[stable]{footmisc}
+
+\title{Documentation for solutions of 'Detecting advanced lane features ROS-test'}
+\author{Sandeep Mattepu, Tony John}
+\date{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}	
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\maketitle
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Task 1 : Read and obey the README.md(Remove all errors from the package and atleast two launch files has to work)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Error 1 : "Could not find package joy" produced by CMakeLists.txt file when compiling the package}
+
+\subsubsection{Solution : }
+Remove package name \textbf{joy} from \textit{find\_package} block in CMakeLists.txt file.
+
+\subsubsection{Approach :}
+\begin{enumerate}
+\item Tried to compile package using \textit{catkin\_make} and it produced error in terminal stating the error.
+\item Looked at all the source code files if any part of the code is using package called \textbf{joy} and we found none.
+\item We removed the \textbf{joy} package and recompiled. The package missing error is fixed.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Error 2 : "Has no member named 'turn' in inf\_main.cpp" and "Has no member named 'forward' in inf\_main.cpp" produced when compiling the package}
+
+\subsubsection{Solution : }
+Change all the lines in inf\_main.cpp file where members of \textit{turtle} variable are being accessed with dot operator(Eg:- \textit{turtle.forward(3)}), replace them with arrow operator(Eg:- \textit{turtle-\textgreater forward(3)})
+
+\subsubsection{Approach :}
+\begin{enumerate}
+\item Tried to compile package using \textit{catkin\_make} and it produced errors in the terminal stating that problem is from  inf\_main.cpp file.
+\item Looked at data type of \textit{turtle} variable which is \textit{std::shared\_ptr\textless\textgreater} type.
+\item Replaced all the dot operators with arrow operators.
+\item Recompiled the project and this error got fixed.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Error 3 : "Requires the 'velocities' arg to be set" produced when trying to launch inf.launch file}
+
+\subsubsection{Solution : }
+Change the line \textit{\textless param name="velocity" value="\$(arg velocities)" /\textgreater} to \textit{\textless param name="velocity" value="\$(arg velocity)" /\textgreater} in inf.launch file
+
+\subsubsection{Approach :}
+\begin{enumerate}
+\item Tried to launch inf.launch in terminal but it shows error in the terminal stating that it requires the \textit{velocities} arg to be set.
+\item By fixing the typo from \textit{velocities} to \textit{velocity} in inf.launch file the error is fixed.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Error 4 : Turtle doesn't go in square as code written in main.cpp when ros\_test.launch file is launched}
+
+\subsubsection{Solution : }
+In turtule\_abstract.h file, inside the constructor of the \textit{AbstractTurtle} class, change the topic name that is being passed to \textit{nh.advertise(   )} function from \textit{"turtle1\_cmd\_vel"} to \textit{"turtle1/cmd\_vel"}.
+
+\subsubsection{Approach :}
+\begin{enumerate}
+\item Checked for any logical errors in main.cpp and turtle\_abstract.h files.
+\item Launched the ros\_test.launch file and opened seperate terminal for debugging using \textit{rostopic} and \textit{rosnode}.
+\item By typing following commands in terminal, we were able to see what topics that \textit{/turtle\_controll} was publishing and what topics that \textit{/turtlesim} was subscribed to.
+\begin{lstlisting}[language=bash]
+  rosnode info /turtle_controll
+  rosnode info /turtlesim
+\end{lstlisting}
+\item There was a mismatch in the name of the topic for publisher(\textit{turtle\_controll}) and subscriber(\textit{turtlesim}). Fixing the name in the code has made the turtle draw a square.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Task 2 : Create a node which draws the/an infinity sign using the "arc"-function\footnote{Please note that after looking at the code inside inf\_main.cpp file we thought that solving this task is just about making this code work properly(print infinity sign when inf.launch file is launched). The explanation here shows how we did it. If your intention was to make us create a new node from scratch and make it print infinity sign, we did this as well you need to checkout \textit{arc-function-node} branch and launch \textbf{inf\_arc.launch}. Description of this task has made us confuse.}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Solution :}
+\begin{enumerate}
+\item Pass the \textit{use\_arc} flag to \textit{draw\_u} function inside inf\_main.cpp file.
+\item If it is true, use \textit{arc} function for drawing the 'U' with a radius of 1.5 and angle of 180.
+\begin{lstlisting}[language=c++]
+if(use_arc)
+{
+    turtle->arc(sign*1.5);
+    turtle->turn(sign*45);
+}
+\end{lstlisting}
+\end{enumerate}
+
+\subsection{Approach :}
+\begin{enumerate}
+\item Looked into inf\_main.cpp file. Found that it takes the \textit{use\_arc} flag but is not used.
+\item Looked into turtle\_abstract.h file. Found out that \textit{arc} function takes \textit{radius} and \textit{angle} of arc as arguments. It could be used in the \textit{draw\_u} function in inf\_main.cpp.
+\end{enumerate}
+
+\end{document}
