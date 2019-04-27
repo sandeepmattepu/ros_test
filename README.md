@@ -59,3 +59,22 @@ if(use_arc)
 #### Approach :
 1. Looked into [inf_main.cpp](./src/inf_main.cpp) file. Found that it takes the `use_arc` flag but is not used.
 2. Looked into [turtle_abstract.h](./include/ros_test/turtle_abstract.h) file. Found out that `arc` function takes `radius` and `angle` of arc as arguments. It could be used in the `draw_u` function in [inf_main.cpp](./src/inf_main.cpp).
+
+## Task 3 : Create a ROS-msg with the status values of the turtle and send it frequently
+#### Solution :
+1. Create a msg file - [TurtleStatus.msg](./msg/TurtleStatus.msg)
+2. `Turtlesim/Pose` message has the position and velocity parameters so we decided to use that in the [TurtleStatus.msg](./msg/TurtleStatus.msg), and additional parameters for accelerations and total distance travelled were added as follows.
+```c++
+turtlesim/Pose position_velocity
+float64 linear_acceleration
+float64 angular_acceleration
+float64 distance_walked
+```
+3. Made necessary changes to [CMakeLists.txt](./CMakeLists.txt) file and [package.xml](./package.xml) for message generation.
+4. Created a publisher for TurtleStatus msg on the topic `/ros_test/turtle_status`.
+5. Calculate the parameters using the current position from the `Pose` message and publish the `turtle_status` message in the `poseCallback` function.
+#### Approach :
+1. Create a custom message including the required parameters.
+2. Add this to [CMakeLists.txt](./CMakeLists.txt) file.
+3. Make necessary changes to [package.xml](./package.xml) for message generation.
+4. Create a topic and publish the message with updated parameters whenever the turtle moves.

@@ -30,6 +30,8 @@
 
 \tableofcontents
 
+\newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -96,10 +98,12 @@ In turtule\_abstract.h file, inside the constructor of the \textit{AbstractTurtl
 \item There was a mismatch in the name of the topic for publisher(\textit{turtle\_controll}) and subscriber(\textit{turtlesim}). Fixing the name in the code has made the turtle draw a square.
 \end{enumerate}
 
+\newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Task 2 : Create a node which draws the/an infinity sign using the "arc"-function\footnote{Please note that after looking at the code inside inf\_main.cpp file we thought that solving this task is just about making this code work properly(print infinity sign when inf.launch file is launched). The explanation here shows how we did it. If your intention was to make us create a new node from scratch and make it print infinity sign, we did this as well you need to checkout \textit{arc-function-node} branch and launch \textbf{inf\_arc.launch}. Description of this task has made us confuse.}}
+\section{Task 2 : Create a node which draws the/an infinity sign using the "arc"-function\footnote{Please note that after looking at the code inside inf\_main.cpp file we thought that solving this task is just about making this code work properly(print infinity sign when inf.launch file is launched). The explanation here shows how we did it. If your intention was to make us create a new node from scratch and make it print infinity sign, we did this as well you need to checkout \textit{arc-function-node} branch and launch \textbf{inf\_arc.launch}. Description of this task has made us confuse}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -120,6 +124,38 @@ if(use_arc)
 \begin{enumerate}
 \item Looked into inf\_main.cpp file. Found that it takes the \textit{use\_arc} flag but is not used.
 \item Looked into turtle\_abstract.h file. Found out that \textit{arc} function takes \textit{radius} and \textit{angle} of arc as arguments. It could be used in the \textit{draw\_u} function in inf\_main.cpp.
+\end{enumerate}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Task 3 : Create a ROS-msg with the status values of the turtle and send it frequently}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Solution :}
+\begin{enumerate}
+\item Create a msg file - msg/TurtleStatus.msg
+\item Turtlesim/Pose message has the position and velocity parameters so we decided to use that in the TurtleStatus.msg, and additional parameters for accelerations and total distance travelled were added as follows.
+\begin{lstlisting}[language=c++]
+turtlesim/Pose position_velocity
+float64 linear_acceleration
+float64 angular_acceleration
+float64 distance_walked
+\end{lstlisting}
+\item Made necessary changes to CMakeLists.txt and package.xml for message generation.
+\item Created a publisher for TurtleStatus msg on the topic \textit{/ros\_test/turtle\_status}.
+\item Calculate the parameters using the current position from the \textit{Pose} message and publish the turtle\_status message in the \textit{poseCallback} function.
+\end{enumerate}
+
+\subsection{Approach :}
+\begin{enumerate}
+\item Create a custom message including the required parameters.
+\item Add this to CMakeLists.txt.
+\item Make necessary changes to package.xml for message generation.
+\item Create a topic and publish the message with updated parameters whenever the turtle moves.
 \end{enumerate}
 
 \end{document}
