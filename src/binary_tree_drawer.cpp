@@ -24,7 +24,7 @@ float BinaryTreeDrawer::determineAngleToRotate(float current_branch)
 	else
 	{
 		// 3 branches divides a region into 2 regions.
-		float angle_between_regions = (angle / (branches - 1));
+		float angle_between_regions = (branch_angle / (branches - 1));
 		angle_to_turn = -(180 - angle_between_regions);
 	}
 }
@@ -37,9 +37,9 @@ void BinaryTreeDrawer::startDrawingTree()
 		ROS_ERROR("Line length cannot be less than 0");
 		return;
 	}
-	else if(branch_angle >= 180)
+	else if(branch_angle >= 180 || branch_angle <= 0)
 	{
-		ROS_ERROR("Angle of branch should be less than 180 degrees");
+		ROS_ERROR("Angle of branch should be in range of 0 to 180 degrees.");
 		return;
 	}
 	else if(tree_depth <= 0)
@@ -68,14 +68,14 @@ void BinaryTreeDrawer::drawBranches(float line_length, int depth_of_tree)
 	turtle->forward(line_length);
 	
 	// Start drawing branches after drawing base line
-	for(int current_branch = 1; i <= branches, i++)
+	for(int current_branch = 1; current_branch <= branches; current_branch++)
 	{
 		float angle_to_turn = determineAngleToRotate(current_branch);
 		turtle->turn(angle_to_turn);
 		
 		// If depth exists then draw other sub-branch else draw final line(leaf)
-		float new_line_length = line_length * branch_reductin_factor;
-		if(depth_of_tree > 0)
+		float new_line_length = line_length * branch_reduction_factor;
+		if(depth_of_tree > 1)
 		{
 			drawBranches(new_line_length, (depth_of_tree - 1));		// Recursive to draw sub-branch
 		}
@@ -87,4 +87,10 @@ void BinaryTreeDrawer::drawBranches(float line_length, int depth_of_tree)
 			turtle->forward(new_line_length);
 		}
 	}
+	
+	// After drawing the branches return to tip of base line
+	float angle_to_turn = determineAngleToRotate(1);		// produces angle aligned with base angle
+	turtle->turn(angle_to_turn);
+	turtle->forward(line_length);
+	angle_to_turn = determineAngleToRotate(2);				// produces angle which prepares for next branch
 } 

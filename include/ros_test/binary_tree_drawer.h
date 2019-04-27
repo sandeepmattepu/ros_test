@@ -22,7 +22,7 @@ private:
 	 *  @param total_branches Total number of branches the turtle needs to draw.
 	 *  @return sum of `values`, or 0.0 if `values` is empty.
 	 **/
-	float determineAngleToRotate(float current_branch, float total_branches);
+	float determineAngleToRotate(float current_branch);
 	
 	/*
 	 *  Draws the branches based on the provided arguments.
