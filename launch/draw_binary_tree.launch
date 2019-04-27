@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="velocity" default="0.5" />
+  <arg name="length" default="2.0" />
+  <arg name="angle" default="60" />
+  <arg name="factor" default="0.8" />
+  <arg name="depth" default="2" />
+  <arg name="branches" default="2" />
+
+  <node pkg="turtlesim" type="turtlesim_node" name="turtlesim" output="screen" />
+
+  <node pkg="ros_test" type="draw_binary_tree" name="turtle_controll" output="screen" >
+    <param name="velocity" value="$(arg velocity)" />
+    <param name="length" value="$(arg length)" />
+    <param name="angle" value="$(arg angle)" />
+    <param name="factor" value="$(arg factor)" />
+    <param name="depth" value="$(arg depth)" />
+    <param name="branches" value="$(arg branches)" />
+  </node>
+
+</launch>
