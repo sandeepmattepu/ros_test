@@ -2,6 +2,7 @@
 #include <geometry_msgs/Twist.h>
 #include <turtlesim/Pose.h>
 #include <ros_test/TurtleStatus.h>
+#include <math.h>
 
 namespace tutorial {
 
@@ -93,6 +94,67 @@ public:
 
         this->pub_cmd_vel.publish( this->stop );
     }
+	
+	bool isTurtleCloserToCollision()
+	{
+		double start_x = this->current_pose.x;
+        double start_y = this->current_pose.y;
+		// Bounds of turtlesim window
+		bool is_closer_to_collision = (start_x < 0.75 || start_x > 10.25 || 
+												start_y < 0.75 || start_y > 10.25);
+		return is_closer_to_collision;
+	}
+	
+	/*
+	 * This function is better version than forward function. This function will detect and stops
+	 * forward motion if the turtle is much closer to walls of turtlesim. If it is closer to the
+	 *  wall then the function returns false and actual_distance_travelled will have how much
+	 *  distance turtle has travelled until abortion. If forward motion was successful then this 
+	 *  function will return true and actual_distance_travelled is equal to length variable.
+	 * */
+	bool collision_aware_forward(double length, double& actual_distance_travelled)
+	{
+		if ( length <= 0 ) 
+		{
+			actual_distance_travelled = 0;
+			return true; 
+		}
+		
+		double start_x = this->current_pose.x;
+        double start_y = this->current_pose.y;
+        double d_sqr = 0;
+        ROS_DEBUG("[FORWARD] length = %.3lf", length);
+		
+		bool is_closer_to_collision = isTurtleCloserToCollision();
+		
+        do 
+		{
+			if(is_closer_to_collision)
+			{
+				actual_distance_travelled = sqrt(d_sqr);
+				this->pub_cmd_vel.publish( this->stop );
+				return false;
+			}
+            this->pub_cmd_vel.publish( this->go_forward );
+            if ( !ros::ok() ) 
+			{
+				actual_distance_travelled = sqrt(d_sqr);
+				this->pub_cmd_vel.publish( this->stop );
+				return false;
+			}
+            ros::Duration(0.001).sleep();
+            ros::spinOnce();
+			
+			is_closer_to_collision = isTurtleCloserToCollision();
+			
+            d_sqr = (this->current_pose.x - start_x) * (this->current_pose.x - start_x) + (this->current_pose.y - start_y) * (this->current_pose.y - start_y);
+        } while ( d_sqr < length * length );
+
+        this->pub_cmd_vel.publish( this->stop );
+		
+		actual_distance_travelled = length;
+		return true;		// Successful forward motion
+	}
 
     /**
         param angle [degree]

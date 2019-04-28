@@ -3,5 +3,6 @@
 ros_test.workspace
 
 # Ignore latex files
-documentation/ros_test.log
-documentation/ros_test.synctex.gz
+documentation/*
+!*.pdf
+!*.tex

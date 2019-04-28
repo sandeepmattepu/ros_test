@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   turtlesim
   std_msgs
+  std_srvs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,7 +71,8 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-   std_msgs  
+   std_msgs 
+   std_srvs
    turtlesim
 )
 
@@ -109,6 +111,7 @@ catkin_package(
   CATKIN_DEPENDS roscpp
   message_runtime
   std_msgs
+  std_srvs
   turtlesim
 #  DEPENDS system_lib
 )
@@ -141,6 +144,7 @@ include_directories(
 
 add_executable( main_node src/main.cpp )
 add_executable( inf_main_node src/inf_main.cpp )
+add_executable( draw_binary_tree src/draw_binary_tree.cpp src/binary_tree_drawer.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -159,9 +163,11 @@ add_executable( inf_main_node src/inf_main.cpp )
 
 add_dependencies(main_node ros_test_generate_messages_cpp)
 add_dependencies(inf_main_node ros_test_generate_messages_cpp)
+add_dependencies(draw_binary_tree ros_test_generate_messages_cpp)
 
 target_link_libraries( main_node ${catkin_LIBRARIES} )
 target_link_libraries( inf_main_node ${catkin_LIBRARIES} )
+target_link_libraries( draw_binary_tree ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
