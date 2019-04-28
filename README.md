@@ -78,3 +78,16 @@ float64 distance_walked
 2. Add this to [CMakeLists.txt](./CMakeLists.txt) file.
 3. Make necessary changes to [package.xml](./package.xml) for message generation.
 4. Create a topic and publish the message with updated parameters whenever the turtle moves.
+
+## Task 4 : Create an node for drawing a binary tree with the turtle
+#### Solution :
+To see the solution, launch it by typing the following command.
+```bash
+roslaunch ros_test draw_binary_tree.launch velocity:="1.0" length:="3.8" angle:="45" factor:="0.5" depth:="3" branches:="3"
+```
+#### Approach :
+1. Created `BinaryTreeDrawer` class which utilizes `tutorial::AbstractTurtle` instance to draw binary tree.
+2. The `drawBranches(   )` function in `BinaryTreeDrawer` contains the logic how it guides the turtle to draw a binary tree. It is a recursive function. Each recursion ends until it draws the line in the deepest branch.
+3. The `collision_aware_forward(   )` function is added to `tutorial::AbstractTurtle` class which performs similar to `forward(  )` function already present in the class. This function stops forward motion when turtle is closer to turtlesim boundaries. With the help of this function `BinaryTreeDrawer` can draw branches which are in bounds of the turtlesim or else it will skip drawing the current branch and starts drawing other branch.
+4. `BinaryTreeDrawer` class is used in [draw_binary_tree.cpp](./src/draw_binary_tree.cpp) for creating a node that actually sends instructions to turtlesim node. [CMakeLists.txt](./CMakeLists.txt) and [package.xml](./package.xml) files are also updated to create a executable.
+5. Created a new launch file that can be launched which is discussed in previous section.
