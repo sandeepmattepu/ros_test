@@ -65,32 +65,39 @@ void BinaryTreeDrawer::startDrawingTree()
 
 void BinaryTreeDrawer::drawBranches(float line_length, int depth_of_tree)
 {
-	turtle->forward(line_length);
-	
-	// Start drawing branches after drawing base line
-	for(int current_branch = 1; current_branch <= branches; current_branch++)
+	double actual_distance_travelled = 0.0;
+	if(turtle->collision_aware_forward(line_length, actual_distance_travelled))
 	{
-		float angle_to_turn = determineAngleToRotate(current_branch);
-		turtle->turn(angle_to_turn);
+		// Start drawing branches after drawing base line
+		for(int current_branch = 1; current_branch <= branches; current_branch++)
+		{
+			float angle_to_turn = determineAngleToRotate(current_branch);
+			turtle->turn(angle_to_turn);
 		
-		// If depth exists then draw other sub-branch else draw final line(leaf)
-		float new_line_length = line_length * branch_reduction_factor;
-		if(depth_of_tree > 1)
-		{
-			drawBranches(new_line_length, (depth_of_tree - 1));		// Recursive to draw sub-branch
+			// If depth exists then draw other sub-branch else draw final line(leaf)
+			float new_line_length = line_length * branch_reduction_factor;
+			if(depth_of_tree > 1)
+			{
+				drawBranches(new_line_length, (depth_of_tree - 1));		// Recursive to draw sub-branch
+			}
+			else
+			{
+				turtle->forward(new_line_length);
+				// Return back to parent branch
+				turtle->turn(180);
+				turtle->forward(new_line_length);
+			}
 		}
-		else
-		{
-			turtle->forward(new_line_length);
-			// Return back to parent branch
-			turtle->turn(180);
-			turtle->forward(new_line_length);
-		}
-	}
 	
-	// After drawing the branches return to tip of base line
-	float angle_to_turn = determineAngleToRotate(1);		// produces angle aligned with base angle
-	turtle->turn(angle_to_turn);
-	turtle->forward(line_length);
-	angle_to_turn = determineAngleToRotate(2);				// produces angle which prepares for next branch
+		// After drawing the branches return to tip of base line
+		float angle_to_turn = determineAngleToRotate(1);		// produces angle aligned with base line
+		turtle->turn(angle_to_turn);
+		turtle->forward(actual_distance_travelled);
+	}
+	else
+	{
+		ROS_WARN_STREAM("Current branch is skipped due to turtle being very closer to collision");
+		turtle->turn(180);
+		turtle->forward(actual_distance_travelled);
+	}
 } 
