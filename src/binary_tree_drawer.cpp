@@ -8,6 +8,7 @@ BinaryTreeDrawer::BinaryTreeDrawer(float line_length, float angle_of_branch, int
 	branch_angle = angle_of_branch;
 	tree_depth = depth_of_tree;
 	branches = num_branches;
+	total_angle = (branches - 1) * branch_angle;
 	branch_reduction_factor = current_to_previous_branch;
 	turtle = turtle_to_use;
 }
@@ -18,13 +19,13 @@ float BinaryTreeDrawer::determineAngleToRotate(float current_branch)
 	// Turtle is just about to draw first branch. It's angle to rotate will be different with others
 	if(current_branch == 1)
 	{
-		angle_to_turn = -(branch_angle / 2);
+		angle_to_turn = -(total_angle / 2);
 	}
 	// Angle needed to rotate after it has returned to branch from previous sub-branch
 	else
 	{
 		// 3 branches divides a region into 2 regions.
-		float angle_between_regions = (branch_angle / (branches - 1));
+		float angle_between_regions = (total_angle / (branches - 1));
 		angle_to_turn = -(180 - angle_between_regions);
 	}
 }
@@ -35,11 +36,6 @@ void BinaryTreeDrawer::startDrawingTree()
 	if(base_line_length <= 0)
 	{
 		ROS_ERROR("Line length cannot be less than 0");
-		return;
-	}
-	else if(branch_angle >= 180 || branch_angle <= 0)
-	{
-		ROS_ERROR("Angle of branch should be in range of 0 to 180 degrees.");
 		return;
 	}
 	else if(tree_depth <= 0)
@@ -59,7 +55,18 @@ void BinaryTreeDrawer::startDrawingTree()
 	}
 	else
 	{
-		drawBranches(base_line_length, tree_depth);
+		// 3 branches makes 2 regions
+		int num_regions = branches - 1;
+		float angle_covered_by_regions = num_regions * branch_angle;
+		if(angle_covered_by_regions > 360)
+		{
+			ROS_ERROR("Combination of number of branches and angle between them is incorrect.");
+			return;
+		}
+		else
+		{
+			drawBranches(base_line_length, tree_depth);
+		}
 	}
 }
 

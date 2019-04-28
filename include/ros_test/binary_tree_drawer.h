@@ -10,6 +10,7 @@ class BinaryTreeDrawer{
 private:
 	float base_line_length;
 	float branch_angle;
+	float total_angle;
 	int tree_depth;
 	int branches;
 	float branch_reduction_factor;
