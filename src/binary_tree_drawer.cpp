@@ -58,7 +58,7 @@ void BinaryTreeDrawer::startDrawingTree()
 		// 3 branches makes 2 regions
 		int num_regions = branches - 1;
 		float angle_covered_by_regions = num_regions * branch_angle;
-		if(angle_covered_by_regions > 360)
+		if(angle_covered_by_regions > 360 || branch_angle <= 0)
 		{
 			ROS_ERROR("Combination of number of branches and angle between them is incorrect.");
 			return;
